@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Board</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Message Board</h1>
+
+    <h2>All Messages</h2>
+    <table>
+        <tr>
+            <th>Content</th>
+            <th>Sender IP</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+        </tr>
+        {% for message in messages %}
+            <tr>
+                <td>{{ message['content'] }}</td>
+                <td>{{ message['sender_ip'] }}</td>
+                <td>{{ message['timestamp'] }}</td>
+                <td>
+                    <form method="post" action="/msgb/delete/{{ message['rowid'] }}">
+                        <button type="submit" name="action" value="delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <form method="post" action="/msgb/create">
+        <label for="content">Message:</label>
+        <input type="text" name="content" id="content" required>
+        <button type="submit" name="action" value="send">Send</button>
+    </form>
+    <br>
+<!--    <a href="/panel">Go to Panel</a>-->
+</body>
+</html>

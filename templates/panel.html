@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Panel</h1>
+    {% if admin %}
+        <p>You have admin privileges.</p>
+    {% else %}
+        <p>You do not have admin privileges.</p>
+    {% endif %}
+
+    {% if not is_panel_page %}
+        <h2>Page Visit Records</h2>
+        <table>
+            <tr>
+                <th>URL</th>
+                <th>IP Address</th>
+            </tr>
+            {% for record in visit_records %}
+                {% if '/panel' not in record[0] %}
+                    <tr>
+                        <td>{{ record[0] }}</td>
+                        <td>{{ record[1] }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        <br>
+        <form method="post" action="/panel">
+            <button type="submit" name="action" value="clear">Clear Records</button>
+        </form>
+    {% endif %}
+
+
+    <h2>Admin Messages</h2>
+    <table>
+        <tr>
+            <th>Content</th>
+            <th>Sender IP</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+        </tr>
+        {% for message in admin_messages %}
+            <tr>
+                <td>{{ message['content'] }}</td>
+                <td>{{ message['sender_ip'] }}</td>
+                <td>{{ message['timestamp'] }}</td>
+                <td>
+                    <form method="post" action="/panel/msg_delete/{{ message['rowid'] }}">
+                        <button type="submit" name="action" value="delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <form method="post" action="/panel">
+        <button type="submit" name="action" value="clear_msg_admin">Clear Messages</button>
+    </form>
+
+    {% if not is_panel_page %}
+        <br>
+        <a href="/panel">Go to Panel</a>
+    {% endif %}
+
+    <br>
+    <a href="/logout">Log Out</a>
+</body>
+</html>
